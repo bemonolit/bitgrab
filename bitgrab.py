@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 url = 'http://www.top-hat-sec.com'
 headers = {                     
     'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
-} 
+}
 req = requests.get(url, headers)
 c = req.content
 
@@ -28,6 +28,14 @@ print '\n'+url
 
 for addr in findbit:
     print '[*]Bitcoin Found ---> '+addr
+    transaction = 'https://blockchain.info/address/'+addr
+    print '[*]Snagging Transaction Data\n'
+    reqtrans = requests.get(transaction)    
+    b = reqtrans.content
+    transoup = BeautifulSoup(b)
+    findtrans = transoup(text=re.compile('[13][a-km-zA-HJ-NP-Z1-9]{25,34}'))
+    for linkc in findtrans:
+        print 'Other Addresses Affiliated With This Address: -->'+linkc
 
 #find all links
 for linka in soup.findAll('a', href=True):
@@ -38,6 +46,10 @@ for linka in soup.findAll('a', href=True):
 for linkb in soup.findAll('a', href=True):
     if ".onion" in linkb['href']:
         print linkb['href']
+
+
+
+
 
 
 #The fucking around section (it works tho)
